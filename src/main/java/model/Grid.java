@@ -115,9 +115,11 @@ public class Grid implements Iterable<Cell> {
 
 
 
-    // TODO: Écrire une version correcte de cette méthode.
     private CellState[][] calculateNextStates() {
         CellState[][] nextCellState = new CellState[getNumberOfRows()][getNumberOfColumns()];
+        for (int y = 0; y < nextCellState.length ; y++)
+            for (int x = 0; x < nextCellState[y].length; x++)
+                nextCellState[y][x] = calculateNextState(y, x);
         return nextCellState;
     }
 
