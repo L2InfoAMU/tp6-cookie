@@ -1,6 +1,7 @@
 package model;
 
 import java.util.*;
+import java.util.function.Function;
 
 
 /**
@@ -99,16 +100,28 @@ public class Grid implements Iterable<Cell> {
         return neighbourCells;
     }
 
+    private int countNeighbours(int rowIndex, int columnIndex, Function<? super Cell, ? extends Boolean> predicat){
+        return (int) getNeighbours(rowIndex, columnIndex).stream().map(predicat).filter(i -> i).count();
+    }
+
     private int countAliveNeighbours(int rowIndex, int columnIndex) {
-        return (int) getNeighbours(rowIndex, columnIndex).stream().map(Cell::isAlive).filter(i -> i).count();
+        return countNeighbours(rowIndex, columnIndex, Cell::isAlive);
+    }
+
+    private int countBlueNeighbours(int rowIndex, int columnIndex) {
+        return countNeighbours(rowIndex, columnIndex, i -> i.getState() == CellState.BLUE);
+    }
+
+    private int countRedNeighbours(int rowIndex, int columnIndex) {
+        return countNeighbours(rowIndex, columnIndex, i -> i.getState() == CellState.RED);
     }
 
     private CellState calculateNextState(int rowIndex, int columnIndex) {
         int aliveCount = countAliveNeighbours(rowIndex, columnIndex);
         CellState state = getCell(rowIndex, columnIndex).getState();
         if(aliveCount == 3 && state == CellState.DEAD)
-            return CellState.ALIVE;
-        if(aliveCount > 1 && state == CellState.ALIVE)
+            return countBlueNeighbours(rowIndex, columnIndex) > countRedNeighbours(rowIndex, columnIndex) ? CellState.BLUE : CellState.RED;
+        if(aliveCount > 1 && aliveCount <= 3 && state.isAlive)
             return state;
         return CellState.DEAD;
     }
@@ -158,16 +171,16 @@ public class Grid implements Iterable<Cell> {
     }
 
     /**
-     * Goes through each {@link Cell} in this {@code Grid} and randomly sets its state as ALIVE or DEAD.
+     * Goes through each {@link Cell} in this {@code Grid} and randomly sets its state as RED or DEAD.
      *
-     * @param random {@link Random} instance used to decide if each {@link Cell} is ALIVE or DEAD.
+     * @param random {@link Random} instance used to decide if each {@link Cell} is RED or DEAD.
      * @throws NullPointerException if {@code random} is {@code null}.
      */
     void randomGeneration(Random random) {
         CellState[][] nextCellState = new CellState[getNumberOfRows()][getNumberOfColumns()];
         for (CellState[] aNextCellState : nextCellState)
             for (int x = 0; x < aNextCellState.length; x++)
-                aNextCellState[x] = random.nextBoolean() ? CellState.ALIVE : CellState.DEAD;
+                aNextCellState[x] = random.nextBoolean() ? random.nextBoolean() ? CellState.BLUE : CellState.RED : CellState.DEAD;
         updateStates(nextCellState);
     }
 }

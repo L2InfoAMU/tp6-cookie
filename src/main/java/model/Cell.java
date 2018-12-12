@@ -41,7 +41,7 @@ public class Cell {
     }
 
     /**
-     * Change the state of this {@link Cell} from ALIVE to DEAD or from DEAD to ALIVE.
+     * Change the state of this {@link Cell} from RED to DEAD or from DEAD to RED.
      */
 
     public void toggleState() {
