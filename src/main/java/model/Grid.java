@@ -1,9 +1,6 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 
 /**
@@ -104,7 +101,7 @@ public class Grid implements Iterable<Cell> {
 
     // TODO: Écrire une version correcte de cette méthode.
     private int countAliveNeighbours(int rowIndex, int columnIndex) {
-        return 0;
+        return (int) getNeighbours(rowIndex, columnIndex).stream().map(Cell::isAlive).filter(i -> i).count();
     }
 
     // TODO: Écrire une version correcte de cette méthode.
