@@ -2,6 +2,7 @@ package model;
 
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.paint.Color;
 
 /**
  * {@link Cell} instances represent the cells of <i>The Game of Life</i>.
@@ -20,12 +21,20 @@ public class Cell {
         return getState().isAlive;
     }
 
+    public boolean isRedAlive() {
+        return isAlive() && isRed();
+    }
+
+    public boolean isBlueAlive() {
+        return isAlive() && isBlue();
+    }
+
     public boolean isRed() {
-        return getState().equals(CellState.RED);
+        return getState().color.equals(Color.RED);
     }
 
     public boolean isBlue() {
-        return getState().equals(CellState.BLUE);
+        return getState().color.equals(Color.BLUE);
     }
 
     /**
