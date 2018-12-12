@@ -120,7 +120,8 @@ public class Grid implements Iterable<Cell> {
         int aliveCount = countAliveNeighbours(rowIndex, columnIndex);
         CellState state = getCell(rowIndex, columnIndex).getState();
         if(aliveCount == 3 && state == CellState.DEAD)
-            return countBlueNeighbours(rowIndex, columnIndex) > countRedNeighbours(rowIndex, columnIndex) ? CellState.BLUE : CellState.RED;
+            return countBlueNeighbours(rowIndex, columnIndex) > countRedNeighbours(rowIndex, columnIndex)
+                    ? CellState.BLUE : CellState.RED;
         if(aliveCount > 1 && aliveCount <= 3 && state.isAlive)
             return state;
         return CellState.DEAD;
