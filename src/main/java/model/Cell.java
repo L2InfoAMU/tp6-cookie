@@ -20,6 +20,14 @@ public class Cell {
         return getState().isAlive;
     }
 
+    public boolean isRed() {
+        return getState().equals(CellState.RED);
+    }
+
+    public boolean isBlue() {
+        return getState().equals(CellState.BLUE);
+    }
+
     /**
      * Sets the state of this {@link Cell}.
      *
