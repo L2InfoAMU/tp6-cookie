@@ -149,9 +149,12 @@ public class Grid implements Iterable<Cell> {
     /**
      * Sets all {@link Cell}s in this {@code Grid} as dead.
      */
-    // TODO: Écrire une version correcte de cette méthode.
     void clear() {
-
+        CellState[][] nextCellState = new CellState[getNumberOfRows()][getNumberOfColumns()];
+        for (CellState[] aNextCellState : nextCellState) {
+            Arrays.fill(aNextCellState, CellState.DEAD);
+        }
+        updateStates(nextCellState);
     }
 
     /**
