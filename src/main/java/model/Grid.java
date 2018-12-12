@@ -100,33 +100,47 @@ public class Grid implements Iterable<Cell> {
         return neighbourCells;
     }
 
-    private int countNeighbours(int rowIndex, int columnIndex, Function<? super Cell, ? extends Boolean> predicat){
-        return (int) getNeighbours(rowIndex, columnIndex).stream().map(predicat).filter(i -> i).count();
+    private int countNeighbours(Collection<? extends Cell> neighbours, Function<? super Cell, ? extends Boolean> predicat) {
+        return (int) neighbours.stream().map(predicat).filter(i -> i).count();
     }
 
-    private int countAliveNeighbours(int rowIndex, int columnIndex) {
-        return countNeighbours(rowIndex, columnIndex, Cell::isAlive);
+    private int countAliveNeighbours(Collection<? extends Cell> neighbours) {
+        return countNeighbours(neighbours, Cell::isAlive);
     }
 
-    private int countBlueNeighbours(int rowIndex, int columnIndex) {
-        return countNeighbours(rowIndex, columnIndex, i -> i.getState() == CellState.BLUE);
+    private int countBlueNeighbours(Collection<? extends Cell> neighbours) {
+        return countNeighbours(neighbours, i -> i.getState().equals(CellState.BLUE));
     }
 
-    private int countRedNeighbours(int rowIndex, int columnIndex) {
-        return countNeighbours(rowIndex, columnIndex, i -> i.getState() == CellState.RED);
+    private int countRedNeighbours(Collection<? extends Cell> neighbours) {
+        return countNeighbours(neighbours, i -> i.getState().equals(CellState.RED));
     }
 
     private CellState calculateNextState(int rowIndex, int columnIndex) {
-        int aliveCount = countAliveNeighbours(rowIndex, columnIndex);
+        List<Cell> neighbours = getNeighbours(rowIndex, columnIndex);
+        int aliveCount = countAliveNeighbours(neighbours);
         CellState state = getCell(rowIndex, columnIndex).getState();
-        if(aliveCount == 3 && state == CellState.DEAD)
-            return countBlueNeighbours(rowIndex, columnIndex) > countRedNeighbours(rowIndex, columnIndex)
-                    ? CellState.BLUE : CellState.RED;
-        if(aliveCount > 1 && aliveCount <= 3 && state.isAlive)
+        if(state == CellState.DEAD && canBeAlive(aliveCount))
+            return getNewAliveCellState(neighbours);
+        if(state.isAlive && canStillAlive(aliveCount))
             return state;
         return CellState.DEAD;
     }
 
+    private CellState getNewAliveCellState(Collection<? extends Cell> neighbours) {
+        if (countBlueNeighbours(neighbours) > countRedNeighbours(neighbours))
+            return CellState.BLUE;
+        else
+            return CellState.RED;
+    }
+
+    private boolean canBeAlive(int aliveCount) {
+        return aliveCount == 3;
+    }
+
+    private boolean canStillAlive(int aliveCount) {
+        return 2 <= aliveCount && aliveCount <= 3;
+    }
 
 
     private CellState[][] calculateNextStates() {
