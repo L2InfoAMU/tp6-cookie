@@ -99,14 +99,18 @@ public class Grid implements Iterable<Cell> {
         return neighbourCells;
     }
 
-    // TODO: Écrire une version correcte de cette méthode.
     private int countAliveNeighbours(int rowIndex, int columnIndex) {
         return (int) getNeighbours(rowIndex, columnIndex).stream().map(Cell::isAlive).filter(i -> i).count();
     }
 
-    // TODO: Écrire une version correcte de cette méthode.
     private CellState calculateNextState(int rowIndex, int columnIndex) {
-        return null;
+        int aliveCount = countAliveNeighbours(rowIndex, columnIndex);
+        CellState state = getCell(rowIndex, columnIndex).getState();
+        if(aliveCount == 3 && state == CellState.DEAD)
+            return CellState.ALIVE;
+        if(aliveCount > 1 && state == CellState.ALIVE)
+            return state;
+        return CellState.DEAD;
     }
 
 
