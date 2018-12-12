@@ -109,11 +109,11 @@ public class Grid implements Iterable<Cell> {
     }
 
     private int countBlueNeighbours(Collection<? extends Cell> neighbours) {
-        return countNeighbours(neighbours, i -> i.getState().equals(CellState.BLUE));
+        return countNeighbours(neighbours, Cell::isBlue);
     }
 
     private int countRedNeighbours(Collection<? extends Cell> neighbours) {
-        return countNeighbours(neighbours, i -> i.getState().equals(CellState.RED));
+        return countNeighbours(neighbours, Cell::isRed);
     }
 
     private CellState calculateNextState(int rowIndex, int columnIndex) {
